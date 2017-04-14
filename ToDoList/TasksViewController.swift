@@ -13,7 +13,7 @@ class TasksViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var toDoList: UITableView!
     
     var tasks: [Task] = []
-
+    
     
     func makeTasks() -> [Task]{
         
@@ -65,16 +65,34 @@ class TasksViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let nextVC = segue.destination as! AddTaskViewController
+        if segue.identifier == "goToTask" {
+            
+            let nextVC = segue.destination as! AddTaskViewController
+            
+            nextVC.prevVC = self
+        }
         
-        nextVC.prevVC = self
+        if segue.identifier == "selectTaskSegue" {
+            
+            let nextVC = segue.destination as! CompleteTaskViewController
+            
+            nextVC.task = sender as! Task
+            
+        }
+        
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let task = tasks[indexPath.row]
+        
+        performSegue(withIdentifier: "selectTaskSegue", sender: task)
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    
     
     
     override func viewDidLoad() {
